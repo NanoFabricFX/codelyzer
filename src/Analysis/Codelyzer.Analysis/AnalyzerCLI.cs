@@ -17,8 +17,27 @@ namespace Codelyzer.Analysis
 
         [Option('o', "json-output-path", Required = false, HelpText = "Json output file path")]
         public string JsonFilePath { get; set; }
+
+        [Option('b', "bin-files", Required = false, HelpText = "Generate Bin Files")]
+        public string GenerateBinFiles { get; set; }
+
+        [Option('t', "max-threads", Required = false, HelpText = "Number of concurrent threads")]
+        public string ConcurrentThreads { get; set; }
+
+        [Option('l', "location-data", Required = false, HelpText = "Add location data to the result")]
+        public string LocationData { get; set; }
+
+        [Option('r', "reference-data", Required = false, HelpText = "Add reference data to the result")]
+        public string ReferenceData { get; set; }
+
+        [Option('d', "detailed-analysis", Required = false, HelpText = "Run detailed analysis that includes enums, structs, interfaces, annotations, and declaration nodes")]
+        public string DetailedAnalysis { get; set; }
+
+        [Option('f', "analyze-failed", Required = false, HelpText = "Analyze projects that fail design build")]
+        public string AnalyzeFailed { get; set; }
+
     }
-    
+
     public class AnalyzerCLI
     {
         public bool Project;
@@ -59,11 +78,47 @@ namespace Codelyzer.Analysis
                         FilePath = o.SolutionPath;
                     }
 
-                    String jsonData;
-                    if (o.JsonFilePath != null && o.JsonFilePath.Length != 0)
+                    if (!string.IsNullOrEmpty(o.JsonFilePath))
                     {
                         Configuration.ExportSettings.GenerateJsonOutput = true;
                         Configuration.ExportSettings.OutputPath = o.JsonFilePath;
+                    }
+
+                    if (!string.IsNullOrEmpty(o.GenerateBinFiles))
+                    {
+                        Configuration.MetaDataSettings.GenerateBinFiles = o.GenerateBinFiles.ToLower() == bool.TrueString.ToLower();
+                    }
+
+                    if (!string.IsNullOrEmpty(o.ReferenceData))
+                    {
+                        Configuration.MetaDataSettings.ReferenceData = o.ReferenceData.ToLower() == bool.TrueString.ToLower();
+                    }
+
+                    if (!string.IsNullOrEmpty(o.LocationData))
+                    {
+                        Configuration.MetaDataSettings.LocationData = o.LocationData.ToLower() == bool.TrueString.ToLower();
+                    }
+
+                    if (!string.IsNullOrEmpty(o.DetailedAnalysis))
+                    {
+                        var result = o.DetailedAnalysis.ToLower() == bool.TrueString.ToLower();
+
+                        Configuration.MetaDataSettings.EnumDeclarations = result;
+                        Configuration.MetaDataSettings.StructDeclarations = result;
+                        Configuration.MetaDataSettings.InterfaceDeclarations = result;
+                        Configuration.MetaDataSettings.DeclarationNodes = result;
+                        Configuration.MetaDataSettings.Annotations = result;
+                    }
+
+                    if (!string.IsNullOrEmpty(o.ConcurrentThreads))
+                    {
+                        int.TryParse(o.ConcurrentThreads, out int concurrentThreads);
+                        Configuration.ConcurrentThreads = concurrentThreads > 0 ? concurrentThreads : Constants.DefaultConcurrentThreads;
+                    }
+
+                    if (!string.IsNullOrEmpty(o.AnalyzeFailed))
+                    {
+                        Configuration.AnalyzeFailedProjects = o.AnalyzeFailed.ToLower() == bool.TrueString.ToLower();
                     }
                 });
 

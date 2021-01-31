@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Codelyzer.Analysis.Model;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
-using Codelyzer.Analysis.Common;
-using Codelyzer.Analysis.Model;
-using Microsoft.Extensions.Logging;
 
 namespace Codelyzer.Analysis
 {
+    [ExcludeFromCodeCoverage]
     class Program
     {
         static async Task Main(string[] args)
@@ -17,7 +18,7 @@ namespace Codelyzer.Analysis
 
             /* 1. Logger object */
             var loggerFactory = LoggerFactory.Create(builder => builder.SetMinimumLevel(LogLevel.Trace).AddConsole());
-            
+
 
             /* 2. Create Configuration settings */
             /*AnalyzerConfiguration configuration = new AnalyzerConfiguration(LanguageOptions.CSharp)
@@ -34,6 +35,7 @@ namespace Codelyzer.Analysis
                     MethodInvocations = true
                 }
             };*/
+            cli.Configuration.MetaDataSettings.DeclarationNodes = true;
 
             /* 3. Get Analyzer instance based on language */
             CodeAnalyzer analyzer = CodeAnalyzerFactory.GetAnalyzer(cli.Configuration, 
@@ -77,6 +79,7 @@ namespace Codelyzer.Analysis
             var allClasses = sourcefile.AllClasses();
             var allMethods = sourcefile.AllMethods();
             var allLiterals = sourcefile.AllLiterals();
+            var declarationNodes = sourcefile.AllDeclarationNodes();
         }
     }
 }

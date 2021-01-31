@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace Codelyzer.Analysis.Model
 {
-    public class ClassDeclaration : UstNode
+    public class InterfaceDeclaration : UstNode
     {
         [JsonProperty("base-type", Order = 10)]
         public string BaseType { get; set; }
@@ -13,8 +13,8 @@ namespace Codelyzer.Analysis.Model
         [JsonProperty("references", Order = 99)]
         public Reference Reference { get; set; }
         public string SemanticAssembly { get; set; }
-        public ClassDeclaration()
-            : base(IdConstants.ClassIdName)
+        public InterfaceDeclaration()
+            : base(IdConstants.InterfaceIdName)
         {
             Reference = new Reference();
         }

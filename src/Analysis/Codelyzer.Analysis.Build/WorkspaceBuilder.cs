@@ -23,7 +23,7 @@ namespace Codelyzer.Analysis.Build
 
         public async Task<List<ProjectBuildResult>> Build()
         {
-            using(var builder = new WorkspaceBuilderHelper(Logger, _workspacePath))
+            using(var builder = new WorkspaceBuilderHelper(Logger, _workspacePath, _analyzerConfiguration))
             {
                 builder.Build();
                 foreach(var projectResult in builder.Projects)
@@ -35,6 +35,19 @@ namespace Codelyzer.Analysis.Build
                         projectBuildHandler.ProjectAnalyzer = projectResult.ProjectAnalyzer;
                         var result = await projectBuildHandler.Build();
                         ProjectResults.Add(result);
+                    }
+                }
+                if (_analyzerConfiguration.AnalyzeFailedProjects)
+                {
+                    foreach (var projectResult in builder.FailedProjects)
+                    {
+                        using (ProjectBuildHandler projectBuildHandler =
+                        new ProjectBuildHandler(Logger, _analyzerConfiguration))
+                        {
+                            projectBuildHandler.ProjectAnalyzer = projectResult.ProjectAnalyzer;
+                            var result = projectBuildHandler.SyntaxOnlyBuild();
+                            ProjectResults.Add(result);
+                        }
                     }
                 }
             }

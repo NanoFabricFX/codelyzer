@@ -1,12 +1,12 @@
-using Newtonsoft.Json.Serialization;
-using System;
-using System.Collections.Generic;
+using Codelyzer.Analysis.Common;
 
 namespace Codelyzer.Analysis
 {
     public class AnalyzerConfiguration
     {
         public string Language;
+        public int ConcurrentThreads = Constants.DefaultConcurrentThreads;
+        public bool AnalyzeFailedProjects = false;
 
         public AnalyzerConfiguration(string language)
         {
@@ -44,5 +44,11 @@ namespace Codelyzer.Analysis
         public bool LocationData = true;
         public bool ReferenceData;
         public bool LoadBuildData = false;
+        public bool InterfaceDeclarations = false;
+        public bool EnumDeclarations = false;
+        public bool StructDeclarations = false;
+        public bool ReturnStatements = false;
+        public bool InvocationArguments = false;
+        public bool GenerateBinFiles = false;
     }
 }

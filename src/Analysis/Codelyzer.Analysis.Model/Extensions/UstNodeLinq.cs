@@ -4,6 +4,11 @@ namespace Codelyzer.Analysis.Model
 {
     public static class UstNodeLinq
     {
+        public static UstList<Annotation> AllAnnotations(this UstNode node)
+        {
+            return GetNodes<Annotation>(node);
+        }
+
         public static UstList<BlockStatement> AllBlockStatements(this UstNode node)
         {
             return GetNodes<BlockStatement>(node);
@@ -12,6 +17,11 @@ namespace Codelyzer.Analysis.Model
         public static UstList<ClassDeclaration> AllClasses(this UstNode node)
         {
             return GetNodes<ClassDeclaration>(node);
+        }
+
+        public static UstList<InterfaceDeclaration> AllInterfaces(this UstNode node)
+        {
+            return GetNodes<InterfaceDeclaration>(node);
         }
 
         public static UstList<ExpressionStatement> AllExpressions(this UstNode node)
@@ -46,6 +56,16 @@ namespace Codelyzer.Analysis.Model
             return GetNodes<MethodDeclaration>(node);
         }
 
+        public static UstList<ReturnStatement> AllReturnStatements(this UstNode node)
+        {
+            return GetNodes<ReturnStatement>(node);
+        }
+
+        public static UstList<ConstructorDeclaration> AllConstructors(this UstNode node)
+        {
+            return GetNodes<ConstructorDeclaration>(node);
+        }
+
         public static UstList<NamespaceDeclaration> AllNamespaces(this UstNode node)
         {
             return GetNodes<NamespaceDeclaration>(node);
@@ -54,6 +74,31 @@ namespace Codelyzer.Analysis.Model
         public static UstList<UsingDirective> AllUsingDirectives(this UstNode node)
         {
             return GetNodes<UsingDirective>(node);
+        }
+
+        public static UstList<DeclarationNode> AllDeclarationNodes(this UstNode node)
+        {
+            return GetNodes<DeclarationNode>(node);
+        }
+
+        public static UstList<EnumDeclaration> AllEnumDeclarations(this UstNode node)
+        {
+            return GetNodes<EnumDeclaration>(node);
+        }
+
+        public static UstList<StructDeclaration> AllStructDeclarations(this UstNode node)
+        {
+            return GetNodes<StructDeclaration>(node);
+        }
+
+        public static UstList<ArrowExpressionClause> AllArrowExpressionClauses(this UstNode node)
+        {
+            return GetNodes<ArrowExpressionClause>(node);
+        }
+
+        public static UstList<Argument> AllArguments(this UstNode node)
+        {
+            return GetNodes<Argument>(node);
         }
 
         private static UstList<T> GetNodes<T>(UstNode node) where T : UstNode
@@ -68,15 +113,11 @@ namespace Codelyzer.Analysis.Model
                     {
                         nodes.Add((T)child);
                     }
-                    else
-                    {
-                        nodes.AddRange(GetNodes<T>(child));
-                    }
+                    nodes.AddRange(GetNodes<T>(child));
                 }
             }
 
             return nodes;
         }
-        
     }
 }
